@@ -26,6 +26,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     loadModel();
   }
 
+//Load object Detection model...
   loadModel() async {
     Tflite.close();
     try {
@@ -37,12 +38,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       showSnackBar(message: "Failed to load model");
     }
   }
-
   void showSnackBar({required String message}) {
     final SnackBar snackBar = SnackBar(content: Text(message));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
+// Pick Image form gallery or camera...
   pickImage(ImageSource imageSource) async {
     ImagePicker picker = ImagePicker();
     XFile? image = await picker.pickImage(source: imageSource);
@@ -53,6 +54,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     predictImage(imageFile);
   }
 
+// set image width ...
   predictImage(File image) async {
     FileImage(image)
         .resolve(const ImageConfiguration())
@@ -63,6 +65,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     await ssdMobileNet(image);
   }
 
+
+// object detection and set its cordiantes...
   ssdMobileNet(File image) async {
     var recognitions = await Tflite.detectObjectOnImage(
         path: image.path, numResultsPerClass: 1, threshold: 0.5);
@@ -91,7 +95,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         _imageScaleAnimation = scaleAnimation;
         setState(() {
           _image = image;
-          // _imageScaleAnimation = scaleAnimation;
         });
 
         return;
